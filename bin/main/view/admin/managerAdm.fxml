@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="222.0" prefWidth="342.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.admin.managerAdm">
+   <children>
+      <AnchorPane prefHeight="403.0" prefWidth="342.0">
+         <children>
+            <Label layoutX="48.0" layoutY="73.0" text="Userid" />
+            <Label layoutX="48.0" layoutY="106.0" text="Password" />
+            <Label layoutX="48.0" layoutY="139.0" text="Nama" />
+            <Label fx:id="label" layoutX="109.0" layoutY="14.0" text="Tambah Akun Manager" />
+            <Button fx:id="bTambah" layoutX="122.0" layoutY="183.0" mnemonicParsing="false" onMouseClicked="#bTambahClick" prefHeight="23.0" prefWidth="145.0" text="Tambah" />
+            <Button fx:id="bBack" layoutX="45.0" layoutY="183.0" mnemonicParsing="false" onMouseClicked="#bBackClick" prefHeight="23.0" prefWidth="73.0" text="Kembali" />
+            <TextField fx:id="tUserid" layoutX="123.0" layoutY="69.0" onKeyPressed="#tUseridEnter" />
+            <TextField fx:id="tPass" layoutX="123.0" layoutY="102.0" onKeyPressed="#tPassEnter" />
+            <TextField fx:id="tNama" layoutX="123.0" layoutY="135.0" onKeyPressed="#tNamaEnter" />
+         </children>
+      </AnchorPane>
+   </children>
+</VBox>
