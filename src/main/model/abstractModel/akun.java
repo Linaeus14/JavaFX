@@ -32,24 +32,4 @@ public abstract class akun extends dataClass {
         this.email = email;
         this.status = status;
     }
-
-    public String getUserid() {
-        return this.userid;
-    }
-
-    public String getPass() {
-        return this.pass;
-    }
-
-    public String getNama() {
-        return this.nama;
-    }
-    
-    public String getEmail() {
-        return this.email;
-    }
-
-    public String getStatus() {
-        return this.status;
-    }
 }

@@ -1,12 +1,10 @@
 package main.controller;
 
-import java.sql.Statement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javafx.fxml.FXML;
-import javafx.application.Platform;
 import javafx.event.Event;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -16,35 +14,40 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.Stage;
-
 import main.model.strip;
+import main.controller.admin.mainAdm;
+import main.controller.pembeli.mainPem;
+import main.controller.staff.mainStaff;
 import main.model.conn;
+import main.model.key;
 
 public class auth {
 
-    private Scene mainStaffScene, mainAdminScene;
+    private Scene mainStaffScene, mainAdminScene, mainPemScene;
     private final strip akun;
+    Alert info = new Alert(AlertType.INFORMATION);
 
     @FXML
     private Tab logTab, regTab;
     @FXML
-    private TextField tUserLog,  tUserReg, tEmailReg;
+    private TextField tUserLog, tUserReg, tNamaReg, tEmailReg;
     @FXML
     private PasswordField tPassLog, tPassReg;
     @FXML
-    private Button bLog,  bReg;
+    private Button bLog, bReg;
 
     public auth(strip akun) {
         this.akun = akun;
     }
 
-    public void initialize() {}
+    public void initialize() {
+        focus();
+    }
 
     @FXML
     void authTab(Event e) {
-        foucs();
-    } 
+        focus();
+    }
 
     @FXML
     void bLogClick(Event e) {
@@ -53,94 +56,185 @@ public class auth {
 
     @FXML
     void bRegClick(Event e) {
+        register(e);
+    }
 
+    @FXML
+    void tUserRegEnter(KeyEvent ke) {
+        key.enterPress(ke, tNamaReg);
+    }
+    
+    @FXML
+    void tNamaRegEnter(KeyEvent ke) {
+        key.enterPress(ke, tEmailReg);
+    }
+    
+    @FXML
+    void tEmailRegEnter(KeyEvent ke) {
+        key.enterPress(ke, tPassReg);
+    }
+
+    @FXML
+    void tPassRegEnter(KeyEvent ke) {
+
+        if (ke.getCode().equals(KeyCode.ENTER)) {
+            register(ke);
+        }
     }
 
     @FXML
     void tUserLogEnter(KeyEvent ke) {
-        if (ke.getCode().equals(KeyCode.ENTER)) {
-            Platform.runLater(()->tPassLog.requestFocus());
-        }
+        key.enterPress(ke, tPassLog);
     }
+
     @FXML
     void tPassLogEnter(KeyEvent ke) {
+
         if (ke.getCode().equals(KeyCode.ENTER)) {
-            validate(ke);;
+            validate(ke);
         }
     }
 
-    public strip getAkun() {
-        return akun;
-    }
-    
-    private void validate(Event e) {
+    private void register(Event e) {
+
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Informasi");
         try {
-
             conn.open();
-            Statement stmt = conn.getCon().createStatement();
-            ResultSet rs = stmt.executeQuery("select * from akun where userid = '" + tUserLog.getText() +"' and pass = '" + tPassLog.getText() + "'");
+            ResultSet rs = conn.select("select * from akun where userid = '" + tUserReg.getText() + "' and pass = '"
+                    + tPassReg.getText() + "'");
 
-            if ( rs.next() == true) {
+            if (!rs.next()) {
+                conn.update("INSERT INTO akun(userid, pass, nama, email, status) value('" + tUserReg.getText() + "', '"
+                        + tPassReg.getText() + "', '" + tNamaReg.getText() + "', '" + tEmailReg.getText()
+                        + "', 'pembeli')");
+                alert.setContentText("Register berhasil!");
+                alert.showAndWait();
+                clearAfterReg();
+                focus();
+                conn.close();
+            } else {
+                conn.close();
+                alert.setContentText("Username sudah ada! gunakan yang lain!");
+                alert.showAndWait();
+                focus();
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
 
-                final String nama = rs.getString("nama");
-                final String userid = rs.getString("userid");
-                final String status = rs.getString("status");
+    private void validate(Event e) {
+
+        try {
+            conn.open();
+            ResultSet rs = conn.select("SELECT * FROM akun WHERE userid = '" + tUserLog.getText() + "' and pass = '"
+                    + tPassLog.getText() + "'");
+
+            if (rs.next()) {
+                String nama = rs.getString("nama");
+                String userid = rs.getString("userid");
+                String status = rs.getString("status");
                 conn.close();
 
                 akun.setNama(nama);
                 akun.setKode(userid);
                 akun.setStatus(status);
-                
-                if(status.equals("admin")) {
+
+                if (status.equals("admin")) {
                     tPassLog.clear();
                     openMainAdmin(e);
-                }
-                else if(status.equals("manager")) {
-                    
-                }
-                else if(status.equals("staff")) {
+                } else if (status.equals("manager")) {
+
+                } else if (status.equals("staff")) {
                     tPassLog.clear();
                     openMainStaff(e);
+                } else {
+                    tPassLog.clear();
+                    openMainPem(e);
                 }
-                else{
-             
-                }
-            }
-            else {
+            } else {
+                conn.close();
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Informasi");
-                alert.setContentText("username atau password salah!");
+                alert.setContentText("Username atau password salah!");
                 alert.showAndWait();
-                foucs();
+                focus();
             }
         } catch (Exception ex) {
             System.out.println(ex);
         }
     }
 
-    private void foucs() {
+    private void focus() {
+
         if (logTab.isSelected()) {
-            Platform.runLater(()->tUserLog.requestFocus());
-        }   else {
-            Platform.runLater(()->tUserReg.requestFocus());
+            key.focus(tUserLog);;
+        } else {
+            key.focus(tUserReg);;
         }
     }
 
-    public void setTransition(Scene mainStaffScene, Scene mainAdminScene) {
+    private void clearAfterReg() {
+
+        tUserReg.clear();
+        tPassReg.clear();
+        tNamaReg.clear();
+        tEmailReg.clear();
+    }
+
+    protected Boolean check() {
+
+        if (key.empty(tUserReg)) {
+            info.setContentText("Mohon isi username!");
+            key.focus(tUserReg);
+            return true;
+
+        } else if (key.empty(tNamaReg)) {
+            info.setContentText("Mohon isi nama!");
+            key.focus(tNamaReg);
+            return true;
+
+        } else if (key.empty(tEmailReg)) {
+            info.setContentText("Mohon isi email!");
+            key.focus(tEmailReg);
+            return true;
+
+        } else if (key.empty(tPassReg)) {
+            info.setContentText("Mohon isi !");
+            key.focus(tPassReg);
+            return true;
+
+        } else {
+            return false;
+        }
+    }
+
+    public void setTransition(Scene mainStaffScene, Scene mainAdminScene, Scene mainPemScene) {
 
         this.mainStaffScene = mainStaffScene;
         this.mainAdminScene = mainAdminScene;
+        this.mainPemScene = mainPemScene;
     }
-    
+
     private final void openMainStaff(Event e) {
 
-        Stage primaryStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-        primaryStage.setScene(mainStaffScene);
+        mainStaff mainStaff = (mainStaff) main.App.getLoader(mainStaffScene).getController();
+        mainStaff.initialize();
+        main.App.setScene(e, mainStaffScene);
     }
 
     private final void openMainAdmin(Event e) {
-        
-        Stage primaryStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-        primaryStage.setScene(mainAdminScene);
+
+        mainAdm mainAdm = (mainAdm) main.App.getLoader(mainAdminScene).getController();
+        mainAdm.initialize();
+        main.App.setScene(e, mainAdminScene);
+    }
+
+    private final void openMainPem(Event e) {
+
+        mainPem mainPem = (mainPem) main.App.getLoader(mainPemScene).getController();
+        mainPem.initialize();
+        main.App.setScene(e, mainPemScene);
     }
 }

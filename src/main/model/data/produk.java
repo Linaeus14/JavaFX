@@ -37,6 +37,13 @@ public class produk extends dataClass {
         setQuery();
     }
 
+    public void updateStok(String kode, int stok) {
+
+        conn.open();
+        conn.update("UPDATE barang SET stok = '" + stok + "' WHERE kode = '" + kode + "'");
+        conn.close();
+    }
+
     public void searchData(TableView table, TextField text, String type) {
 
         String query = "SELECT b.kode, b.nama, p.produsen, b.harga, b.stok FROM barang b JOIN produsen p ON b.kodeP = p.kodeP " + "WHERE " + type + " like '%" + text.getText() + "%'";
@@ -46,7 +53,6 @@ public class produk extends dataClass {
     public void fillComboBox(ComboBox<String> comboBox) {
 
         String query = "SELECT produsen FROM produsen";
-        
         conn.open();
         ResultSet rs = conn.select(query);
         try {
@@ -60,7 +66,7 @@ public class produk extends dataClass {
         conn.close();
     }
 
-    public String produsenToKodeP(String produsen) {
+    private String produsenToKodeP(String produsen) {
 
         String result = null;
 
@@ -82,61 +88,11 @@ public class produk extends dataClass {
     private void setQuery() {
 
         if(this.harga != null & this.stok != null){
-            this.updateQuery = "UPDATE barang SET nama = '" + this.nama + "', kodep = '" + produsenToKodeP(this.kodep) + "', harga = '" + Integer.parseInt(this.harga) + "', stok = '" + Integer.parseInt(this.stok) + "' WHERE kode = '" + this.kode + "'";
             this.writeMainQuery = "INSERT INTO barang(kode, nama, kodep, harga, stok) value('" + this.kode + "', '" + this.nama + "', '" + produsenToKodeP(this.kodep) + "', '" + Integer.parseInt(this.harga) + "', '" + Integer.parseInt(this.stok) + "')";
+            this.updateQuery = "UPDATE barang SET nama = '" + this.nama + "', kodep = '" + produsenToKodeP(this.kodep) + "', harga = '" + Integer.parseInt(this.harga) + "', stok = '" + Integer.parseInt(this.stok) + "' WHERE kode = '" + this.kode + "'";
         }
-        this.writeCheckQuery = "SELECT * FROM barang WHERE kode = '" + this.kode + "'";
+        this.writeCheckQuery = "SELECT * FROM barang WHERE kode = '" + this.kode + "' OR nama = '" + this.nama + "'";
         this.readQuery = "SELECT b.kode, b.nama, p.produsen, b.harga, b.stok FROM barang b JOIN produsen p ON b.kodeP = p.kodeP";
         this.deleteQuery = "DELETE FROM barang WHERE kode = '" + this.kode + "'";
-    }
-
-    public String getKode() {
-        return this.kode;
-    }
-
-    public void setKode(String kode) {
-
-        this.kode = kode;
-        setQuery();
-    }
-
-    public String getNama() {
-        return this.nama;
-    }
-
-    public void setNama(String nama) {
-
-        this.nama = nama;
-        setQuery();
-    }
-
-    public String getkodep() {
-        return this.kodep;
-    }
-
-    public void setkodep(String kodep) {
-
-        this.kodep = kodep;
-        setQuery();
-    }
-
-    public String getharga() {
-        return this.harga;
-    }
-
-    public void setharga(String harga) {
-
-        this.harga = harga;
-        setQuery();
-    }
-
-    public String getStok() {
-        return this.stok;
-    }
-
-    public void setStok(String stok) {
-
-        this.stok = stok;
-        setQuery();
     }
 }

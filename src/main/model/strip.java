@@ -13,9 +13,9 @@ public class strip {
     public void setStrip(Label stripNama, Label stripKode, Label stripStatus) {
 
         try {
-            namaProperty().addListener((obs, oldText, newText) -> stripNama.setText(newText));
-            kodeProperty().addListener((obs, oldText, newText) -> stripKode.setText(newText));
-            statusProperty().addListener((obs, oldText, newText) -> stripStatus.setText(newText));
+            nama.addListener((obs, oldText, newText) -> stripNama.setText(newText));
+            kode.addListener((obs, oldText, newText) -> stripKode.setText(newText));
+            status.addListener((obs, oldText, newText) -> stripStatus.setText(newText));
         } catch (Exception e) {
             System.out.println(e);
         }

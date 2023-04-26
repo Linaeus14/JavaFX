@@ -3,7 +3,9 @@ package main;
 import java.io.IOException;
 
 import javafx.application.Application;
+import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -12,6 +14,7 @@ import main.controller.auth;
 import main.controller.admin.mainAdm;
 import main.controller.admin.managerAdm;
 import main.controller.admin.staffAdm;
+import main.controller.pembeli.mainPem;
 import main.controller.staff.mainStaff;
 import main.controller.staff.prdnStaff;
 import main.controller.staff.prdStaff;
@@ -36,6 +39,8 @@ public class App extends Application {
             return new prdnStaff();
         } else if (type == prdStaff.class) {
             return new prdStaff();
+        } else if (type == mainPem.class) {
+            return new mainPem(model);
         } else {
             try {
                 return type.getDeclaredConstructor().newInstance() ; // default behavior - invoke no-arg construtor
@@ -63,12 +68,15 @@ public class App extends Application {
         Scene staffMainScene = buildScene("view/staff/mainStaff.fxml");
         Scene prdnScene = buildScene("view/staff/prdnStaff.fxml");
         Scene prdScene = buildScene("view/staff/prdStaff.fxml");
+
+        //Pembeli
+        Scene pemMainScene = buildScene("view/pembeli/mainPem.fxml");
       
         // TRANSISI
 
         //Autentikasi
         auth auth = (auth) getLoader(authScene).getController();
-        auth.setTransition(staffMainScene, admMainScene);
+        auth.setTransition(staffMainScene, admMainScene, pemMainScene);
 
         //Admin
         mainAdm admMain = (mainAdm) getLoader(admMainScene).getController();
@@ -89,6 +97,10 @@ public class App extends Application {
 
         prdStaff staffPrd = (prdStaff) getLoader(prdScene).getController();
         staffPrd.setTransition(staffMainScene);
+
+        //Pembeli
+        mainPem pemMain = (mainPem) getLoader(pemMainScene).getController();
+        pemMain.setTransition(authScene);
 
         primaryStage.setScene(authScene);
         primaryStage.show();
@@ -112,5 +124,11 @@ public class App extends Application {
         
         FXMLLoader loader = (FXMLLoader) scene.getUserData();
         return loader;
+    }
+
+    public final static void setScene(Event e, Scene scene) {
+
+        Stage primaryStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+        primaryStage.setScene(scene);
     }
 }

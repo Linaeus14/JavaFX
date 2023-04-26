@@ -2,7 +2,6 @@ package main.model;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -11,14 +10,15 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.util.Callback;
+import main.model.data.keranjang;
 
 public class dynamicTable {
     
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({"rawtypes", "unchecked"})
     protected final void readDB(TableView table, String query) {
     //This code will trigger type safety warning due to how the cellValueFactory works
         
-        ObservableList<ObservableList> data;
+        ObservableList<ObservableList<?>> data;
         data = FXCollections.observableArrayList();
 
         conn.open();
@@ -65,5 +65,24 @@ public class dynamicTable {
             e.printStackTrace();
         }
         conn.close();
+    }
+
+    public final void readKeranjang(TableView<keranjang> table, ObservableList<keranjang> listkeranjang) {
+
+        table.getItems().clear();
+        table.getColumns().clear();
+
+        TableColumn<keranjang, String> nameCol = new TableColumn<>("Barang");
+        nameCol.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        TableColumn<keranjang, Integer> valueCol = new TableColumn<>("Jumlah");
+        valueCol.setCellValueFactory(cellData -> cellData.getValue().valueProperty().asObject());
+        TableColumn<keranjang, Integer> subTotalCol = new TableColumn<>("Total");
+        subTotalCol.setCellValueFactory(cellData -> cellData.getValue().subTotalProperty().asObject());
+
+        table.getColumns().add(nameCol);
+        table.getColumns().add(valueCol);
+        table.getColumns().add(subTotalCol);
+
+        table.setItems(listkeranjang);
     }
 }

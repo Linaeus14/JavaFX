@@ -4,7 +4,6 @@ package main.controller.staff;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -14,7 +13,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
+import main.model.key;
 import main.model.data.produk;
 
 public class prdStaff {
@@ -31,6 +30,8 @@ public class prdStaff {
 
     public void initialize() {
 
+        key.numberInput(tHarga);
+        key.numberInput(tStok);
         produk produk = new produk();
         clear();
         produk.fillComboBox(tProdusen);
@@ -53,7 +54,7 @@ public class prdStaff {
             );
 
             if (!produk.writeData()) {
-                info.setContentText("kode sudah ada!");
+                info.setContentText("kode atau nama sudah ada!");
                 info.showAndWait();
             } else {
                 openMainStaff(event);
@@ -68,44 +69,48 @@ public class prdStaff {
 
     @FXML
     void tKodeEnter(KeyEvent event) {
-        enterPress(event, tNama);
+        key.enterPress(event, tNama);
     }
 
     @FXML
     void tNamaEnter(KeyEvent event) {
-        enterPress(event, tHarga);
+        key.enterPress(event, tHarga);
     }
 
     @FXML
     void tHargaEnter(KeyEvent event) {
-        enterPress(event, tStok);
+
+        key.enterPress(event, tStok);
     }
 
     @FXML
-    void tStokEnter(KeyEvent event) {
-        enterPress(event);
+    void tStokEnter(KeyEvent ke) {
+
+        if (ke.getCode().equals(KeyCode.ENTER)) {
+            bPrdTambahClick(ke);
+        }
     }
 
     private Boolean check() {
 
-        if (tKode.getText() == null || tKode.getText().trim().isEmpty()) {
+        if (key.empty(tKode)) {
             info.setContentText("Mohon isi kode!");
-            Platform.runLater(()->tKode.requestFocus());
+            key.focus(tKode);;
             return true;
 
-        } else if (tNama.getText() == null || tNama.getText().trim().isEmpty()) {
+        } else if (key.empty(tNama)) {
             info.setContentText("Mohon isi nama barang!");
-            Platform.runLater(()->tNama.requestFocus());
+            key.focus(tNama);;
             return true;
 
-        } else if (tHarga.getText() == null || tHarga.getText().trim().isEmpty()) {
+        } else if (key.empty(tHarga)) {
             info.setContentText("Mohon isi harga barang!");
-            Platform.runLater(()->tHarga.requestFocus());
+            key.focus(tHarga);;
             return true;
 
-        } else if (tStok.getText() == null || tStok.getText().trim().isEmpty()) {
+        } else if (key.empty(tStok)) {
             info.setContentText("Mohon isi stok barang!");
-            Platform.runLater(()->tStok.requestFocus());
+            key.focus(tStok);;
             return true;
 
         } else {
@@ -122,17 +127,6 @@ public class prdStaff {
         tStok.clear();
     }
 
-    private void enterPress(KeyEvent ke) {
-        if (ke.getCode().equals(KeyCode.ENTER)) {
-            bPrdTambahClick(ke);
-        }
-    }
-    private void enterPress(KeyEvent ke, TextField textfield) {
-        if (ke.getCode().equals(KeyCode.ENTER)) {
-            Platform.runLater(()->textfield.requestFocus());
-        }
-    }
-
     public void setTransition(Scene beforeScene) {
         this.beforeScene = beforeScene;
     }
@@ -141,7 +135,6 @@ public class prdStaff {
 
         mainStaff staffMain = (mainStaff) main.App.getLoader(beforeScene).getController();
         staffMain.initialize();
-        Stage primaryStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-        primaryStage.setScene(beforeScene);
+        main.App.setScene(e, beforeScene);
     }
 }

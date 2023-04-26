@@ -39,50 +39,10 @@ public class produsen extends dataClass {
 
     private void setQuery() {
 
-        this.writeCheckQuery = "SELECT * FROM produsen WHERE kodep = '" + this.kode + "'";
+        this.writeCheckQuery = "SELECT * FROM produsen WHERE kodep = '" + this.kode + "' OR produsen = '" + this.produsen + "'";
         this.writeMainQuery = "INSERT INTO produsen(kodep, produsen, alamat, kontak) value('" + this.kode + "', '" + this.produsen + "', '" + this.alamat + "', '" + this.kontak + "')";
         this.readQuery = "SELECT * FROM produsen";
         this.updateQuery = "UPDATE produsen SET produsen = '" + this.produsen + "', alamat = '" + this.alamat + "', kontak = '" + this.kontak + "' WHERE kodep = '" + this.kode + "'";
         this.deleteQuery = "DELETE FROM produsen WHERE kodep = '" + this.kode + "'";
-    }
-
-    public String getKode() {
-        return this.kode;
-    }
-
-    public void setKode(String kode) {
-
-        this.kode = kode;
-        setQuery();
-    }
-
-    public String getProdusen() {
-        return this.produsen;
-    }
-
-    public void setProdusen(String produsen) {
-
-        this.produsen = produsen;
-        setQuery();
-    }
-
-    public String getAlamat() {
-        return this.alamat;
-    }
-
-    public void setAlamat(String alamat) {
-
-        this.alamat = alamat;
-        setQuery();
-    }
-
-    public String getKontak() {
-        return this.kontak;
-    }
-
-    public void setKontak(String kontak) {
-
-        this.kontak = kontak;
-        setQuery();
     }
 }

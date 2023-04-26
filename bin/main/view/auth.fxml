@@ -38,25 +38,31 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="431.0">
                      <children>
-                        <Label layoutX="27.0" layoutY="35.0" text="Username">
+                        <Label layoutX="27.0" layoutY="21.0" text="Username">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="tUserReg" layoutX="111.0" layoutY="31.0" prefHeight="35.0" prefWidth="290.0" />
+                        <TextField fx:id="tUserReg" layoutX="111.0" layoutY="22.0" onKeyPressed="#tUserRegEnter" prefHeight="26.0" prefWidth="290.0" />
                         <Label layoutX="29.0" layoutY="128.0" text="Password">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <PasswordField fx:id="tPassReg" layoutX="112.0" layoutY="122.0" prefHeight="35.0" prefWidth="288.0" />
-                        <Label layoutX="60.0" layoutY="82.0" text="Email">
+                        <Label layoutX="60.0" layoutY="94.0" text="Email">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="tEmailReg" layoutX="111.0" layoutY="76.0" prefHeight="35.0" prefWidth="290.0" />
                         <Button fx:id="bReg" layoutX="28.0" layoutY="172.0" mnemonicParsing="false" onMouseClicked="#bRegClick" prefHeight="23.0" prefWidth="371.0" text="Sign Up" />
+                        <TextField fx:id="tNamaReg" layoutX="111.0" layoutY="59.0" onKeyPressed="#tNamaRegEnter" prefHeight="26.0" prefWidth="290.0" />
+                        <TextField fx:id="tEmailReg" layoutX="111.0" layoutY="93.0" onKeyPressed="#tEmailRegEnter" prefHeight="26.0" prefWidth="290.0" />
+                        <Label layoutX="58.0" layoutY="58.0" text="Nama">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <PasswordField fx:id="tPassReg" layoutX="111.0" layoutY="127.0" onKeyPressed="#tPassRegEnter" prefHeight="26.0" prefWidth="290.0" />
                      </children>
                   </AnchorPane>
                </content>

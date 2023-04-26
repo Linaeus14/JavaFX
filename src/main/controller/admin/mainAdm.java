@@ -1,13 +1,9 @@
 package main.controller.admin;
 
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
@@ -17,17 +13,16 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
 
+import main.controller.mainController;
+import main.model.key;
 import main.model.strip;
 import main.model.data.manager;
 import main.model.data.staff;
 
-public class mainAdm {
+public class mainAdm extends mainController {
 
-    private Scene beforeScene, staffAdmScene, managerAdmScene;
-    private strip akun;
-    Alert info = new Alert(AlertType.INFORMATION), alert = new Alert(AlertType.CONFIRMATION);
+    private Scene staffAdmScene, managerAdmScene;
 
     @FXML
     private Button bHapusMan, bHapusStaff, bLogOut, bTambahMan, bTambahStaff, bUbahMan, bUbahStaff;
@@ -42,9 +37,8 @@ public class mainAdm {
     @FXML
     private ComboBox<String> typeMan, typeStaff;
 
-
     public mainAdm(strip akun) {
-        this.akun = akun;
+        super(akun);
     }
 
     public void initialize() {
@@ -70,13 +64,13 @@ public class mainAdm {
 
     @FXML
     void tableStaffSelect(MouseEvent event) {
-        
+
         ObservableList<String> selectedList = tableStaff.getSelectionModel().getSelectedItem();
         tUseridStaff.setText(selectedList.get(0));
         tPassStaff.setText(selectedList.get(1));
         tNamaStaff.setText(selectedList.get(2));
     }
-    
+
     @FXML
     void bTambahStaffClick(MouseEvent event) {
         openStaff(event);
@@ -85,23 +79,27 @@ public class mainAdm {
     @FXML
     void bUbahStaffClick(MouseEvent event) {
 
-        staff staff = new staff(
-            tUseridStaff.getText(), 
-            tPassStaff.getText(), 
-            tNamaStaff.getText(), 
-            null, 
-            "staff"
-        );
+        if (checkSelected(tableStaff)) {
 
-        staff.updateData();
-        clearStaff();
-        staff.readData(tableStaff);
+            staff staff = new staff(
+                    tUseridStaff.getText(),
+                    tPassStaff.getText(),
+                    tNamaStaff.getText(),
+                    null,
+                    "staff");
+
+            staff.updateData();
+            clearStaff();
+            staff.readData(tableStaff);
+        } else {
+            info.show();
+        }
     }
 
     @FXML
     void bHapusStaffClick(MouseEvent event) {
 
-        if (tableStaff.getSelectionModel().getSelectedItem() != null) {
+        if (checkSelected(tableStaff)) {
             ObservableList<String> selectedList = tableStaff.getSelectionModel().getSelectedItem();
             staff staff = new staff(selectedList.get(0));
 
@@ -141,23 +139,26 @@ public class mainAdm {
     @FXML
     void bUbahManClick(MouseEvent event) {
 
-        manager manager = new manager(
-            tUseridMan.getText(), 
-            tPassMan.getText(), 
-            tNamaMan.getText(), 
-            null, 
-            "manager"
-        );
+        if (checkSelected(tableMan)) {
+            manager manager = new manager(
+                    tUseridMan.getText(),
+                    tPassMan.getText(),
+                    tNamaMan.getText(),
+                    null,
+                    "manager");
 
-        manager.updateData();
-        clearMan();
-        manager.readData(tableMan);
+            manager.updateData();
+            clearMan();
+            manager.readData(tableMan);
+        } else {
+            info.show();
+        }
     }
 
     @FXML
     void bHapusManClick(MouseEvent event) {
-        
-        if (tableMan.getSelectionModel().getSelectedItem() != null) {
+
+        if (checkSelected(tableMan)) {
             ObservableList<String> selectedList = tableMan.getSelectionModel().getSelectedItem();
             manager manager = new manager(selectedList.get(0));
 
@@ -190,27 +191,18 @@ public class mainAdm {
         }
     }
 
-    @FXML
-    void bLogOutClick(MouseEvent event) {
-
-        akun.setNama(null);
-        akun.setKode(null);
-        akun.setStatus(null);
-        openAuth(event);
-    }
-
     private void tabOnStaff() {
 
         staff staff = new staff();
         staff.readData(tableStaff);
-        Platform.runLater(()->keywordStaff.requestFocus());
+        key.focus(keywordStaff);
     }
 
     private void tabOnManager() {
 
         manager manager = new manager();
         manager.readData(tableMan);
-        Platform.runLater(()->keywordMan.requestFocus());
+        key.focus(keywordMan);
     }
 
     private void clearStaff() {
@@ -234,25 +226,17 @@ public class mainAdm {
         this.managerAdmScene = managerAdmScene;
     }
 
-    private final void openAuth(Event e) {
-
-        Stage primaryStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-        primaryStage.setScene(beforeScene);
-    }
-    
     private final void openStaff(Event e) {
 
         inputAdm inputAdm = (inputAdm) main.App.getLoader(staffAdmScene).getController();
         inputAdm.initialize();
-        Stage primaryStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-        primaryStage.setScene(staffAdmScene);
+        main.App.setScene(e, staffAdmScene);
     }
 
     private final void openMan(Event e) {
 
         inputAdm inputAdm = (inputAdm) main.App.getLoader(managerAdmScene).getController();
         inputAdm.initialize();
-        Stage primaryStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-        primaryStage.setScene(managerAdmScene);
+        main.App.setScene(e, managerAdmScene);
     }
 }

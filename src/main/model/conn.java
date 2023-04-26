@@ -68,12 +68,4 @@ public class conn {
             System.out.println(e);
         }
     }
-
-    public static final Connection getCon() {
-        return con;
-    }
-    
-    public static final void setCon(Connection conn) {
-        con = conn;
-    }
 }

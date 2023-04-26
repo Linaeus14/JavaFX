@@ -3,7 +3,6 @@ package main.controller.admin;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -13,10 +12,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
-import main.model.data.manager;
 
-public class inputAdm {
+import main.model.key;
+
+class inputAdm {
 
     Scene beforeScene;
     Alert info = new Alert(AlertType.INFORMATION);
@@ -32,7 +31,7 @@ public class inputAdm {
 
         clear();
         info.setTitle("Informasi");
-        Platform.runLater(()->tUserid.requestFocus());
+        Platform.runLater(() -> tUserid.requestFocus());
     }
 
     @FXML
@@ -42,57 +41,41 @@ public class inputAdm {
 
     @FXML
     void bTambahClick(Event event) {
-
-        if (check()) {
-            info.showAndWait();
-        } else {
-                manager manager = new manager(
-                tUserid.getText(),
-                tPass.getText(),
-                tNama.getText(), 
-                null,
-                "manager"
-            );
-
-            if (!manager.writeData()) {
-                info.setContentText("kode sudah ada!");
-                info.showAndWait();
-            } else {
-                openMainAdm(event);
-            }
-        }
     }
 
     @FXML
     void tUseridEnter(KeyEvent event) {
-        enterPress(event, tPass);
+        key.enterPress(event, tPass);
     }
 
     @FXML
     void tPassEnter(KeyEvent event) {
-        enterPress(event, tNama);
+        key.enterPress(event, tNama);
     }
 
     @FXML
-    void tNamaEnter(KeyEvent event) {
-        enterPress(event);
+    void tNamaEnter(KeyEvent ke) {
+
+        if (ke.getCode().equals(KeyCode.ENTER)) {
+            bTambahClick(ke);
+        }
     }
 
     protected Boolean check() {
 
-        if (tUserid.getText() == null || tUserid.getText().trim().isEmpty()) {
+        if (key.empty(tUserid)) {
             info.setContentText("Mohon isi kode!");
-            Platform.runLater(()->tUserid.requestFocus());
+            key.focus(tUserid);
             return true;
 
-        } else if (tPass.getText() == null || tPass.getText().trim().isEmpty()) {
-            info.setContentText("Mohon isi nama produsen!");
-            Platform.runLater(()->tPass.requestFocus());
+        } else if (key.empty(tPass)) {
+            info.setContentText("Mohon isi password!");
+            key.focus(tPass);
             return true;
 
-        } else if (tNama.getText() == null || tNama.getText().trim().isEmpty()) {
-            info.setContentText("Mohon isi alamat produsen!");
-            Platform.runLater(()->tNama.requestFocus());
+        } else if (key.empty(tNama)) {
+            info.setContentText("Mohon isi nama!");
+            key.focus(tNama);
             return true;
 
         } else {
@@ -107,19 +90,6 @@ public class inputAdm {
         tNama.clear();
     }
 
-    protected void enterPress(KeyEvent ke) {
-        
-        if (ke.getCode().equals(KeyCode.ENTER)) {
-            bTambahClick(ke);
-        }
-    }
-    protected void enterPress(KeyEvent ke, TextField textfield) {
-
-        if (ke.getCode().equals(KeyCode.ENTER)) {
-            Platform.runLater(()->textfield.requestFocus());
-        }
-    }
-
     public void setTransition(Scene beforeScene) {
         this.beforeScene = beforeScene;
     }
@@ -128,7 +98,6 @@ public class inputAdm {
 
         mainAdm admMain = (mainAdm) main.App.getLoader(beforeScene).getController();
         admMain.initialize();
-        Stage primaryStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-        primaryStage.setScene(beforeScene);
+        main.App.setScene(e, beforeScene);
     }
 }

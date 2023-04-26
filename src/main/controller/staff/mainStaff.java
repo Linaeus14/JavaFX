@@ -1,12 +1,9 @@
 package main.controller.staff;
 
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
@@ -14,21 +11,20 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
-import javafx.stage.Stage;
 
+import main.controller.pesananController;
+import main.model.key;
 import main.model.strip;
+import main.model.data.pembelian;
 import main.model.data.produk;
 import main.model.data.produsen;
 
-public class mainStaff {
-
-    private Scene beforeScene, prdnScene, prdScene;
-    private strip akun;
-    Alert info = new Alert(AlertType.INFORMATION), alert = new Alert(AlertType.CONFIRMATION);
+public class mainStaff extends pesananController {
+    
+    private Scene prdnScene, prdScene;
 
     @FXML
-    private Tab tabPrdn;
+    private Tab tabPrdn, tabPrd;
     @FXML
     private Label stripNama, stripKode, stripStatus;
     @FXML
@@ -36,17 +32,20 @@ public class mainStaff {
     @FXML
     private TextField tHarga, tStok, keywordPrdn, keywordPrd;
     @FXML
-    private Button bTambahPrdn, bUbahPrdn, bHapusPrdn, bTambahPrd, bLogOut;
+    private Button bTambahPrdn, bUbahPrdn, bHapusPrdn, bTambahPrd, bSelsai, bLogOut;
     @FXML
-    private ComboBox<String> typePrdn,  typePrd, tProdusen2;
+    private ComboBox<String> typePrdn, typePrd, tProdusen2;
     @FXML
     private TableView<ObservableList<String>> tableProdusen, tableProduk;
 
     public mainStaff(strip akun) {
-        this.akun = akun;
+        super(akun);
     }
 
     public void initialize() {
+
+        key.numberInput(tHarga);
+        key.numberInput(tStok);
 
         alert.setTitle("Hapus");
         alert.setContentText("Yakin ingin hapus?");
@@ -62,9 +61,7 @@ public class mainStaff {
         typePrd.getSelectionModel().select("Kode");
 
         akun.setStrip(stripNama, stripKode, stripStatus);
-
-        tabOnPrd();
-        tabOnPrdn();
+        tabChange(null);
     }
 
     @FXML
@@ -92,22 +89,26 @@ public class mainStaff {
     @FXML
     void bUbahPrdnClick(Event e) {
 
-        produsen produsen = new produsen(
-            tKodeP.getText(),
-            tProdusen.getText(),
-            tAlamat.getText(),
-            tKontak.getText()
-        );
-    
-        produsen.updateData();
-        clearPrdn();
-        produsen.readData(tableProdusen);
+        if (checkSelected(tableProdusen)) {
+
+            produsen produsen = new produsen(
+                    tKodeP.getText(),
+                    tProdusen.getText(),
+                    tAlamat.getText(),
+                    tKontak.getText());
+
+            produsen.updateData();
+            clearPrdn();
+            produsen.readData(tableProdusen);
+        } else {
+            info.showAndWait();
+        }
     }
 
     @FXML
     void bHapusPrdnClick(Event e) {
 
-        if (tableProdusen.getSelectionModel().getSelectedItem() != null) {
+        if (checkSelected(tableProdusen)) {
             ObservableList<String> selectedList = tableProdusen.getSelectionModel().getSelectedItem();
             produsen produsen = new produsen(selectedList.get(0));
 
@@ -149,24 +150,28 @@ public class mainStaff {
     @FXML
     void bUbahPrdClick(Event e) {
 
-        produk produk = new produk(
+        if (checkSelected(tableProduk)) {
 
-            tKode.getText(), 
-            tNama.getText(), 
-            tProdusen2.getValue(), 
-            tHarga.getText(), 
-            tStok.getText()
-        );
+            produk produk = new produk(
 
-        produk.updateData();
-        clearPrd();
-        produk.readData(tableProduk);
+                    tKode.getText(),
+                    tNama.getText(),
+                    tProdusen2.getValue(),
+                    tHarga.getText(),
+                    tStok.getText());
+
+            produk.updateData();
+            clearPrd();
+            produk.readData(tableProduk);
+        } else {
+            info.showAndWait();
+        }
     }
 
     @FXML
     void bHapusPrdClick(Event e) {
 
-        if (tableProduk.getSelectionModel().getSelectedItem() != null) {
+        if (checkSelected(tableProduk)) {
             ObservableList<String> selectedList = tableProduk.getSelectionModel().getSelectedItem();
             produk produk = new produk(selectedList.get(0));
 
@@ -183,21 +188,25 @@ public class mainStaff {
     }
 
     @FXML
-    void bLogOutClick(Event e) {
-        
-        akun.setNama(null);
-        akun.setKode(null);
-        akun.setStatus(null);
-        openAuth(e);
+    void bSelsaiClick() {
+
+        if(checkSelected(tablePembelian)) {
+            ObservableList<String> selectedList = tablePembelian.getSelectionModel().getSelectedItem();
+            pembelian pembelian = new pembelian();
+            pembelian.updateStatus(Integer.parseInt(selectedList.get(0)));
+            tabOnR();
+        }
     }
 
     @FXML
     void tabChange(Event e) {
-        
+
         if (tabPrdn.isSelected()) {
             tabOnPrdn();
-        }   else {
+        } else if(tabPrd.isSelected()) {
             tabOnPrd();
+        } else {
+            tabOnR();
         }
     }
 
@@ -205,7 +214,8 @@ public class mainStaff {
 
         produsen produsen = new produsen();
         produsen.readData(tableProdusen);
-        Platform.runLater(()->keywordPrdn.requestFocus());
+        key.focus(keywordPrdn);
+        ;
     }
 
     private void tabOnPrd() {
@@ -213,7 +223,15 @@ public class mainStaff {
         produk produk = new produk();
         produk.readData(tableProduk);
         produk.fillComboBox(tProdusen2);
-        Platform.runLater(()->keywordPrd.requestFocus());
+        key.focus(keywordPrd);
+        ;
+    }
+
+    @Override
+    protected void tabOnR() {
+
+        pembelian pembelian = new pembelian();
+        pembelian.readProcessed(tablePembelian);
     }
 
     private void clearPrdn() {
@@ -232,30 +250,23 @@ public class mainStaff {
     }
 
     public void setTransition(Scene beforeScene, Scene prdnScene, Scene prdScene) {
+
         this.beforeScene = beforeScene;
         this.prdnScene = prdnScene;
         this.prdScene = prdScene;
-    }
-
-    private final void openAuth(Event e) {
-
-        Stage primaryStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-        primaryStage.setScene(beforeScene);
     }
 
     private final void openPrdn(Event e) {
 
         prdnStaff prdnStaff = (prdnStaff) main.App.getLoader(prdnScene).getController();
         prdnStaff.initialize();
-        Stage primaryStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-        primaryStage.setScene(prdnScene);
+        main.App.setScene(e, prdnScene);
     }
 
     private final void openPrd(Event e) {
 
         prdStaff prdStaff = (prdStaff) main.App.getLoader(prdScene).getController();
         prdStaff.initialize();
-        Stage primaryStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-        primaryStage.setScene(prdScene);
+        main.App.setScene(e, prdScene);
     }
 }
