@@ -6,7 +6,7 @@ proyek ini dibuat demi memenuhi tugas akhir praktikum pemprograman berbasis obje
 
  Kelompok A2-7
 
-- 
+- Agditha Evalyn Lolongan 2109106030
 -
 -
 - Tito Darmawan 2109106042
