@@ -1,18 +1,27 @@
-# Getting Started
+# Projek Akhir Pemprograman Berbasis Objek
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+proyek ini dibuat demi memenuhi tugas akhir praktikum pemprograman berbasis objek
 
-## Folder Structure
+## Anggota Kelompok
 
-The workspace contains two folders by default, where:
+ Kelompok A2-7
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+- 
+-
+-
+- Tito Darmawan
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+## Struktur Folder
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+Workspace memiliki dua folder secara bawaan, dimana:
 
-## Dependency Management
+- `src`: folder untuk menyimpan kode sumber atau source code
+- `lib`: folder untuk menyimpan library dependencies yang digunakan
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+Sedangkan, file keluaran hasil dari compile program ada di folder `bin` secara bawaan.
+
+Source code memiliki struktur MVC, dimana :
+
+- `model`     : objek kelas "java" yang digunakan untuk menghubungkan ke database dengan mysql
+- `view`      : file fxml yang digunakan untuk tampilan
+- `controller`: objek kelas java yang digunakan untuk menghubungkan model dan view
