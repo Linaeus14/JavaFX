@@ -51,6 +51,12 @@ public class pembelian extends dataClass {
         readData(table);
     }
 
+    public void readDone(TableView<?> table) {
+
+        this.readQuery = "SELECT idPembelian, total FROM pembelian WHERE status = 'selsai'";
+        readData(table);
+    }
+
     public void updateStatus(int idPembelian) {
 
         this.updateQuery = "UPDATE pembelian SET status = 'selsai' WHERE idPembelian = '" + idPembelian + "'";

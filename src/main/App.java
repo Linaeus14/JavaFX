@@ -14,6 +14,7 @@ import main.controller.auth;
 import main.controller.admin.mainAdm;
 import main.controller.admin.managerAdm;
 import main.controller.admin.staffAdm;
+import main.controller.manager.mainMan;
 import main.controller.pembeli.mainPem;
 import main.controller.staff.mainStaff;
 import main.controller.staff.prdnStaff;
@@ -41,6 +42,8 @@ public class App extends Application {
             return new prdStaff();
         } else if (type == mainPem.class) {
             return new mainPem(model);
+        } else if (type == mainMan.class) {
+            return new mainMan(model);
         } else {
             try {
                 return type.getDeclaredConstructor().newInstance() ; // default behavior - invoke no-arg construtor
@@ -71,12 +74,15 @@ public class App extends Application {
 
         //Pembeli
         Scene pemMainScene = buildScene("view/pembeli/mainPem.fxml");
+
+        //manager
+        Scene manMainScene = buildScene("view/manager/mainMan.fxml");
       
         // TRANSISI
 
         //Autentikasi
         auth auth = (auth) getLoader(authScene).getController();
-        auth.setTransition(staffMainScene, admMainScene, pemMainScene);
+        auth.setTransition(staffMainScene, admMainScene, pemMainScene, manMainScene);
 
         //Admin
         mainAdm admMain = (mainAdm) getLoader(admMainScene).getController();
@@ -101,6 +107,10 @@ public class App extends Application {
         //Pembeli
         mainPem pemMain = (mainPem) getLoader(pemMainScene).getController();
         pemMain.setTransition(authScene);
+
+        //Manager
+        mainMan manMain = (mainMan) getLoader(manMainScene).getController();
+        manMain.setTransition(authScene);
 
         primaryStage.setScene(authScene);
         primaryStage.show();

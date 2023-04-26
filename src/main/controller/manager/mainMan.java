@@ -1,48 +1,41 @@
 package main.controller.manager;
 
-
-import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.stage.Stage;
+import javafx.scene.control.TextField;
+import main.controller.pesananController;
 import main.model.strip;
+import main.model.data.pembelian;
 
-public class mainMan {
-
-    private Scene beforeScene;
-    private strip akun;
-
+public class mainMan extends pesananController {
+    
     @FXML
-    private Label stripNama;
-    @FXML
-    private Label stripKode;
-    @FXML
-    private Label stripStatus;
-
-    public mainMan(strip akun) {
-        this.akun = akun;
+    private TextField tTotal;
+    
+    public void initialize() {
+        
+        akun.setStrip(stripNama, stripKode, stripStatus);
+        tabOnR();
     }
 
-    public void initialize() {
+    public mainMan(strip akun) {
+        super(akun);
+    }
+    
+    @Override
+    protected void tabOnR() {
 
-        try {
-            akun.namaProperty().addListener((obs, oldText, newText) -> stripNama.setText(newText));
-            akun.kodeProperty().addListener((obs, oldText, newText) -> stripKode.setText(newText));
-            akun.statusProperty().addListener((obs, oldText, newText) -> stripStatus.setText(newText));
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+        pembelian pembelian = new pembelian();
+        pembelian.readDone(tablePembelian);
 
+        int total = 0;
+            for (int i = 0;i < tablePembelian.getItems().size();i++) {
+                total += Integer.parseInt(tablePembelian.getItems().get(i).get(1));
+            }
+        tTotal.setText(Integer.toString(total));
     }
 
     public void setTransition(Scene beforeScene) {
         this.beforeScene = beforeScene;
-    }
-
-    public void openAuth(Event e) {
-        Stage primaryStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-        primaryStage.setScene(beforeScene);
     }
 }

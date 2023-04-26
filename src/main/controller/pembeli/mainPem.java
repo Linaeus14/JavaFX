@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -30,8 +29,6 @@ public class mainPem extends pesananController {
     private Button bKonfirmasi, bPlus, bMinus, bTambah, bX;
     @FXML
     private TextField keywordPrd, tValue;
-    @FXML
-    private Label stripKode, stripNama, stripStatus;
     @FXML
     private Tab tabPem;
     @FXML

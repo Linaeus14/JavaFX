@@ -16,6 +16,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import main.model.strip;
 import main.controller.admin.mainAdm;
+import main.controller.manager.mainMan;
 import main.controller.pembeli.mainPem;
 import main.controller.staff.mainStaff;
 import main.model.conn;
@@ -23,7 +24,7 @@ import main.model.key;
 
 public class auth {
 
-    private Scene mainStaffScene, mainAdminScene, mainPemScene;
+    private Scene mainStaffScene, mainAdminScene, mainPemScene, mainManScene;
     private final strip akun;
     Alert info = new Alert(AlertType.INFORMATION);
 
@@ -145,7 +146,7 @@ public class auth {
                     tPassLog.clear();
                     openMainAdmin(e);
                 } else if (status.equals("manager")) {
-
+                    openMainMan(e);
                 } else if (status.equals("staff")) {
                     tPassLog.clear();
                     openMainStaff(e);
@@ -210,11 +211,12 @@ public class auth {
         }
     }
 
-    public void setTransition(Scene mainStaffScene, Scene mainAdminScene, Scene mainPemScene) {
+    public void setTransition(Scene mainStaffScene, Scene mainAdminScene, Scene mainPemScene, Scene mainManScene) {
 
         this.mainStaffScene = mainStaffScene;
         this.mainAdminScene = mainAdminScene;
         this.mainPemScene = mainPemScene;
+        this.mainManScene = mainManScene;
     }
 
     private final void openMainStaff(Event e) {
@@ -236,5 +238,12 @@ public class auth {
         mainPem mainPem = (mainPem) main.App.getLoader(mainPemScene).getController();
         mainPem.initialize();
         main.App.setScene(e, mainPemScene);
+    }
+
+    private final void openMainMan(Event e) {
+
+        mainMan mainMan = (mainMan) main.App.getLoader(mainManScene).getController();
+        mainMan.initialize();
+        main.App.setScene(e, mainManScene);
     }
 }

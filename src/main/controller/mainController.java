@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Label;
 import main.model.strip;
 import javafx.scene.control.TableView;
 
@@ -13,6 +14,9 @@ public class mainController {
     protected Scene beforeScene;
     protected strip akun;
     protected Alert info = new Alert(AlertType.INFORMATION), alert = new Alert(AlertType.CONFIRMATION);
+
+    @FXML
+    protected Label stripKode, stripNama, stripStatus;
 
     public mainController(strip akun) {
         this.akun = akun;
