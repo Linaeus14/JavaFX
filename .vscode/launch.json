@@ -10,7 +10,7 @@
             "request": "launch",
             "mainClass": "main.App",
             "projectName": "PERMATA_daaf9893",
-            "vmArgs": "--module-path \"C:/program files/java/javafx-sdk-20/lib\" --add-modules javafx.controls,javafx.fxml"
+            "vmArgs": "--module-path lib/javafx-sdk-21.0.2/lib --add-modules javafx.controls,javafx.fxml"
         }
     ]
 }
